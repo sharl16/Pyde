@@ -1,67 +1,24 @@
-import tkinter as tk
+import idlelib.colorizer as ic
+import idlelib.percolator as ip
+import re
+from tkinter import TclError
 
-def highlight_keywords(file_text):
-    yellow_keywords = {
-        "print",
-        "function",
-        "bind",
-        "mainloop()",
-        """"",
-        """""
-    }
-    blue_keywords = {
-        "def",
-        "var",
-        "not",
-        "True",
-        "False",
-        "str",
-        "int"
-    }
-    purple_keywords = {
-        "import",
-        "for",
-        "while",
-        "if",
-        "break",
-        "from",
-        "(",
-        ")"
-    }
-    
-    text = file_text.get("1.0", "end")  
-    # Clear all existing tags
-    file_text.tag_remove("yellow_keyword", "1.0", "end")
-    file_text.tag_remove("blue_keyword", "1.0", "end")
-    file_text.tag_remove("purple_keyword", "1.0", "end")   
-    # Highlight yellow keywords
-    for keyword in yellow_keywords:
-        start = "1.0"
-        while True:
-            pos = file_text.search(keyword, start, stopindex="end", nocase=True)
-            if not pos:
-                break
-            start = pos + "+%dc" % len(keyword)
-            file_text.tag_add("yellow_keyword", pos, start)
-            file_text.tag_config("yellow_keyword", foreground="#ff983d")  # Custom RGB: Golden Yellow 
-    # Highlight blue keywords
-    for keyword in blue_keywords:
-        start = "1.0"
-        while True:
-            pos = file_text.search(keyword, start, stopindex="end", nocase=True)
-            if not pos:
-                break
-            start = pos + "+%dc" % len(keyword)
-            file_text.tag_add("blue_keyword", pos, start)
-            file_text.tag_config("blue_keyword", foreground="blue")
-   
-    # Highlight purple keywords
-    for keyword in purple_keywords:
-        start = "1.0"
-        while True:
-            pos = file_text.search(keyword, start, stopindex="end", nocase=True)
-            if not pos:
-                break
-            start = pos + "+%dc" % len(keyword)
-            file_text.tag_add("purple_keyword", pos, start)
-            file_text.tag_config("purple_keyword", foreground="purple")
+def highlight_keywords(text_widget):
+    try:
+        cdg = ic.ColorDelegator()
+        cdg.prog = re.compile(r'\b(?P<MYGROUP>tkinter)\b|' + ic.make_pat(), re.S)
+        cdg.idprog = re.compile(r'\s+(\w+)', re.S)
+
+        cdg.tagdefs['MYGROUP'] = {'foreground': '#7F7F7F', 'background': '#FFFFFF'}
+
+        # These five lines are optional. If omitted, default colours are used.
+        cdg.tagdefs['COMMENT'] = {'foreground': '#FF0000', 'background': '#FFFFFF'}
+        cdg.tagdefs['KEYWORD'] = {'foreground': '#007F00', 'background': '#FFFFFF'}
+        cdg.tagdefs['BUILTIN'] = {'foreground': '#7F7F00', 'background': '#FFFFFF'}
+        cdg.tagdefs['STRING'] = {'foreground': '#7F3F00', 'background': '#FFFFFF'}
+        cdg.tagdefs['DEFINITION'] = {'foreground': '#007F7F', 'background': '#FFFFFF'}
+
+        ip.Percolator(text_widget).insertfilter(cdg)
+    except TclError:
+        # Handle the case when the redirection already exists
+        pass

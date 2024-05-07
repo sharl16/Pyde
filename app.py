@@ -50,7 +50,6 @@ def process_file(file_path):
     except Exception as e:
         messagebox.showerror("Error", str(e))
 
-
 def create_file(file_path):
     try:
         with open(file_path, 'w', encoding='utf-8') as new_file:
@@ -131,12 +130,14 @@ edit_menu.add_command(
 edit_menu.add_command(
     label="Configure Interpeter",
     accelerator="",
-    command=print("Not implemented")
+    command=print("Not implemented"),
+    state=tk.DISABLED
 )
 edit_menu.add_command(
     label="Add Interpeter",
     accelerator="",
-    command=print("Not implemented")
+    command=print("Not implemented"),
+    state=tk.DISABLED
 )
 file_menu.add_separator()
 file_menu.add_command(label="Exit", command=root.destroy)
