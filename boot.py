@@ -1,5 +1,4 @@
 import tkinter as tk
-import time
 
 def show_splash(image_path, window_width, window_height):
     global splash_root
