@@ -23,12 +23,12 @@ def show_splash(image_path, window_width, window_height):
     splash_root.after(4000, lambda: splash_root.destroy())
     splash_root.mainloop()
 
-image_path = r'resources\PydeSplash.png'
+image_path = r'_internal\appData\resources\PydeSplash.png'
 window_width = 600
 window_height = 282
 
 show_splash(image_path,window_width,window_height)
-import app
+from appData import app
 app.start_app()
 
 
